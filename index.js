@@ -31,7 +31,13 @@ app.get('/', (req, res) => {
 
 app.get('/campgrounds', async (req, res) => {
 	const campgrounds = await Campground.find({});
-	res.render('campgrounds/index', { campgrounds });
+	const page = req.query.page;
+	const limit = req.query.limit;
+
+	const startIndex = (page - 1) * limit;
+	const endIndex = page * limit
+	const result = campgrounds.slice(startIndex, endIndex)
+	res.render('campgrounds/index', { campgrounds, result });
 });
 
 app.get('/campgrounds/new', (req, res) => {
